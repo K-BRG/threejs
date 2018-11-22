@@ -1,95 +1,108 @@
 <!DOCTYPE html>
  <html>
-    <head>		
-        <title>____________glTF2_Loader_________</title>
-        <style>
-		body { margin: 0; }
-		canvas { width: 100%; height: 100% }
-      </style>
-  </head>
-    <body>
-    <script src="js/three.js"></script>
+<head>		
+	<title>mythreejs</title>
+	<script src="js/three.js"></script>
 	<script src="js/OrbitControls.js"></script>
 	<script src="js/GLTFLoader.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+<div class="main">
+	<h1> Hello Suzanne!</h1>
+</div>
+
+<div class="threejs-content">
+	<script>		
+	// Load 3D Scene
+	var scene = new THREE.Scene(); 
+
+	// Load Camera Perspektive
+	var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 20000 );
+	camera.position.set( 1, 1, 20 );
+		
+	// Load a Renderer
+	var renderer = new THREE.WebGLRenderer({ alpha: false });
 	
-<script>		
+	renderer.setClearColor( 0x101010 );
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
 
- // Load 3D Scene
-var scene = new THREE.Scene(); 
 
- // Load Camera Perspektive
-var camera = new THREE.PerspectiveCamera( 25, window.innerWidth / window.innerHeight, 1, 20000 );
-camera.position.set( 1, 1, 20 );
-	
- // Load a Renderer
-var renderer = new THREE.WebGLRenderer({ alpha: false });
-renderer.setClearColor( 0xC5C5C3 );
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-	
- // Load the Orbitcontroller
-var controls = new THREE.OrbitControls( camera, renderer.domElement ); 
-			
- // Load Light
-var ambientLight = new THREE.AmbientLight( 0xcccccc );
-scene.add( ambientLight );
-			
-var directionalLight = new THREE.DirectionalLight( 0xffffff );
-directionalLight.position.set( 0, 1, 1 ).normalize();
-scene.add( directionalLight );				
+	// check when the browser size has changed and adjust the camera accordingly
+	window.addEventListener( 'resize', function( )
+		{
+			var WIDTH = window.innerWidth;
+			var HEIGHT = window.innerHeight;
+			renderer.setSize( WIDTH, HEIGHT );
+			camera.aspect = WIDTH / HEIGHT;
+			camera.updateProjectionMatrix( );
+		} );
 
-// Instantiate a loader
-var loader = new THREE.GLTFLoader();
+		
+	// Load the Orbitcontroller
+	var controls = new THREE.OrbitControls( camera, renderer.domElement ); 
+				
+	// Load Light
+	var ambientLight = new THREE.AmbientLight( 0xcccccc );
+	scene.add( ambientLight );
+				
+	var directionalLight = new THREE.DirectionalLight( 0xffffff );
+	directionalLight.position.set( 0, 1, 1 ).normalize();
+	scene.add( directionalLight );				
 
-/*
-// Optional: Provide a DRACOLoader instance to decode compressed mesh data
-THREE.DRACOLoader.setDecoderPath( '/examples/js/libs/draco' );
-loader.setDRACOLoader( new THREE.DRACOLoader() );
-*/
+	// Instantiate a loader
+	var loader = new THREE.GLTFLoader();
 
-// Load a glTF resource
-loader.load(
-	// resource URL
-	'models/suzanne.glb',
-	// called when the resource is loaded
-	function ( gltf ) {
+	/*
+	// Optional: Provide a DRACOLoader instance to decode compressed mesh data
+	THREE.DRACOLoader.setDecoderPath( '/examples/js/libs/draco' );
+	loader.setDRACOLoader( new THREE.DRACOLoader() );
+	*/
 
-		scene.add( gltf.scene );
+	// Load a glTF resource
+	loader.load(
+		// resource URL
+		'models/suzanne.glb',
+		// called when the resource is loaded
+		function ( gltf ) {
 
-		gltf.animations; // Array<THREE.AnimationClip>
-		gltf.scene; // THREE.Scene
-		gltf.scenes; // Array<THREE.Scene>
-		gltf.cameras; // Array<THREE.Camera>
-		gltf.asset; // Object
+			scene.add( gltf.scene );
 
-	},
-	// called while loading is progressing
-	function ( xhr ) {
+			gltf.animations; // Array<THREE.AnimationClip>
+			gltf.scene; // THREE.Scene
+			gltf.scenes; // Array<THREE.Scene>
+			gltf.cameras; // Array<THREE.Camera>
+			gltf.asset; // Object
 
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+		},
+		// called while loading is progressing
+		function ( xhr ) {
 
-	},
-	// called when loading has errors
-	function ( error ) {
+			console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-		console.log( 'An error happened' );
+		},
+		// called when loading has errors
+		function ( error ) {
 
-	}
-);
+			console.log( 'An error happened' );
 
-function animate() {
+		}
+	);
+
+	function animate() {
+		render();
+		requestAnimationFrame( animate );
+		}
+
+	function render() {
+		renderer.render( scene, camera );
+		}
+
 	render();
-	requestAnimationFrame( animate );
-	}
-
-function render() {
-	renderer.render( scene, camera );
-	}
-
-render();
-animate();
-
-</script>	
+	animate();
+	</script>
+	</div>
 </body>
 </html>
